@@ -6,15 +6,31 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		// Integer[] arr = generateArray(50000);
-		Integer[] arr = { 5, 3, 4, 1, -6 };
+		// Integer[] arr = generateArray(10);
+		Integer[] arr1 = {5, 1, -2, 6, 2};
+		Integer[] arr2 = {5, 1, -2, 6, 2};
+		Integer[] arr3 = {5, 1, -2, 6, 2};
+		Integer[] arr4 = {5, 1, -2, 6, 2};
 
-		// long startTime = System.nanoTime();
-		printArray(arr);
-		insertionSort(arr, arr.length, true);
-		printArray(arr);
-		// long endTime = System.nanoTime();
-		// System.out.println((endTime - startTime) / 1000000000 + " s");
+		System.out.println("QuickSort");
+		printArray(arr1);
+		QuickSort.sort(arr1);
+		printArray(arr1);
+
+		System.out.println("InsertionSort");
+		printArray(arr2);
+		InsertionSort.sort(arr2, arr2.length);
+		printArray(arr2);
+
+		System.out.println("SelectionSort");
+		printArray(arr3);
+		SelectionSort.sort(arr3);
+		printArray(arr3);
+
+		System.out.println("MergeSort");
+		printArray(arr4);
+		MergeSort.sort(arr4);
+		printArray(arr4);
 	}
 
 	private static Integer[] generateArray(int n) {
@@ -33,64 +49,6 @@ public class Main {
 		for (T el : arr)
 			System.out.print(el + " ");
 		System.out.println("]");
-	}
-
-	public static <T extends Comparable<? super T>> void insertionSort(T[] arr, int n) {
-		insertionSort(arr, 0, n - 1, false);
-	}
-
-	public static <T extends Comparable<? super T>> void insertionSort(T[] arr, int n, boolean two) {
-		insertionSort(arr, 0, n - 1, two);
-	}
-
-	public static <T extends Comparable<? super T>> void insertionSort(T[] arr, int start, int end, boolean two) {
-		if (two) {
-			for (int i = start + 1; i <= end - 1; i++) {
-				T tmp1 = arr[i];
-				T tmp2 = arr[i + 1];
-				int j = i - 1;
-				boolean done = false;
-				while (!done && j >= 0) {
-					if (tmp2.compareTo(arr[j]) < 0) {
-						if (tmp1.compareTo(arr[j]) < 0) {
-							arr[j + 2] = arr[j];
-							arr[j] = tmp1;
-							arr[j + 1] = tmp2;
-							j--;
-						} else {
-							arr[j + 2] = tmp1;
-							arr[j + 1] = arr[j];
-							arr[j] = tmp2;
-							tmp1 = arr[j];
-							tmp2 = arr[j + 1];
-							j--;
-						}
-					} else if (tmp1.compareTo(arr[j]) < 0) {
-						arr[j + 1] = arr[j];
-						arr[j] = tmp1;
-						tmp2 = arr[j + 1];
-						j--;
-					} else {
-						done = true;
-					}
-				}
-			}
-		} else {
-			for (int i = start + 1; i <= end; i++) {
-				T temp = arr[i];
-				int j = i - 1;
-				boolean done = false;
-				while (!done && j >= 0) {
-					if (temp.compareTo(arr[j]) < 0) {
-						arr[j + 1] = arr[j];
-						j--;
-					} else {
-						done = true;
-					}
-				}
-				arr[j + 1] = temp;
-			}
-		}
 	}
 
 }
