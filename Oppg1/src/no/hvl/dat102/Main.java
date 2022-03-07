@@ -6,11 +6,10 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		// Integer[] arr = generateArray(10);
-		Integer[] arr1 = {5, 1, -2, 6, 2};
-		Integer[] arr2 = {5, 1, -2, 6, 2};
-		Integer[] arr3 = {5, 1, -2, 6, 2};
-		Integer[] arr4 = {5, 1, -2, 6, 2};
+		Integer[] arr1 = generateArray(10);
+		Integer[] arr2 = arr1.clone();
+		Integer[] arr3 = arr1.clone();
+		Integer[] arr4 = arr1.clone();
 
 		System.out.println("QuickSort");
 		printArray(arr1);
@@ -38,7 +37,7 @@ public class Main {
 
 		Random randy = new Random();
 		for (int i = 0; i < arr.length; i++) {
-			arr[i] = randy.nextInt();
+			arr[i] = Math.abs(randy.nextInt()) % n;
 		}
 
 		return arr;
