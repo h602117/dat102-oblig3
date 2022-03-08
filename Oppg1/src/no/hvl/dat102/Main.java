@@ -4,42 +4,25 @@ import java.util.Random;
 
 public class Main {
 
-	private final static int COUNT = 10;
+	private final static int RUN_TIMES = 5;
+	private final static int COUNT = 32000;
+
+	private enum Algorithm {
+		INSERTION, SELECTION, QUICK, MERGE
+	}
 
 	public static void main(String[] args) {
 
-		Integer[] arr = generateArray(32000);
+		long[] is = new long[RUN_TIMES];
+		long[] ss = new long[RUN_TIMES];
+		long[] qs = new long[RUN_TIMES];
+		long[] ms = new long[RUN_TIMES];
 
-		long[] qs = new long[COUNT];
-		long[] is = new long[COUNT];
-		long[] ss = new long[COUNT];
-		long[] ms = new long[COUNT];
-
-		for (int i = 0; i < COUNT; i++) {
-			Integer[] arr1 = arr.clone();
-			Integer[] arr2 = arr.clone();
-			Integer[] arr3 = arr.clone();
-			Integer[] arr4 = arr.clone();
-
-			System.out.println("QuickSort");
-			Timer.start();
-			QuickSort.sort(arr1);
-			qs[i] = Timer.end();
-
-			Timer.start();
-			System.out.println("InsertionSort");
-			InsertionSort.sort(arr2, arr2.length);
-			is[i] = Timer.end();
-
-			Timer.start();
-			System.out.println("SelectionSort");
-			SelectionSort.sort(arr3);
-			ss[i] = Timer.end();
-
-			Timer.start();
-			System.out.println("MergeSort");
-			MergeSort.sort(arr4);
-			ms[i] = Timer.end();
+		for (int i = 0; i < RUN_TIMES; i++) {
+			is[i] = run(Algorithm.INSERTION);
+			ss[i] = run(Algorithm.SELECTION);
+			qs[i] = run(Algorithm.QUICK);
+			ms[i] = run(Algorithm.MERGE);
 		}
 
 		System.out.println("Average:");
@@ -51,6 +34,42 @@ public class Main {
 
 	}
 
+	private static long run(Algorithm algo) {
+		Integer[] arr = generateArray(COUNT);
+		long sTime;
+		long dur = 0;
+
+		switch (algo) {
+			case INSERTION:
+				System.out.println("Insertion");
+				sTime = System.nanoTime();
+				InsertionSort.sort(arr, arr.length);
+				dur = (System.nanoTime() - sTime) / 1000000;
+				break;
+			case SELECTION:
+				System.out.println("Selection");
+				sTime = System.nanoTime();
+				SelectionSort.sort(arr);
+				dur = (System.nanoTime() - sTime) / 1000000;
+				break;
+			case QUICK:
+				System.out.println("Quick");
+				sTime = System.nanoTime();
+				QuickSort.sort(arr);
+				dur = (System.nanoTime() - sTime) / 1000000;
+				break;
+			case MERGE:
+				System.out.println("Merge");
+				sTime = System.nanoTime();
+				MergeSort.sort(arr);
+				dur = (System.nanoTime() - sTime) / 1000000;
+				break;
+		}
+
+		System.out.println("Duration: " + dur + " ms");
+		return dur;
+	}
+
 	private static long avg(long[] arr) {
 		long sum = 0;
 
@@ -58,7 +77,7 @@ public class Main {
 			sum += l;
 		}
 
-		return sum / COUNT;
+		return sum / RUN_TIMES;
 	}
 
 	private static Integer[] generateArray(int n) {
