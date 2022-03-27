@@ -99,13 +99,13 @@ public class BS_Tre<T extends Comparable<? super T>> implements SoektreInterface
 
 	// my shit oppgave 1
 	public int hoyde() {
-		return maksDistanseRekursiv(rot) - 1;
+		return hoydeRek(rot) - 1;
 	}
 
-	private int maksDistanseRekursiv(BinaerTreNode<T> node) {
+	private int hoydeRek(BinaerTreNode<T> node) {
 		if (node == null)
 			return 0;
-		return Math.max(maksDistanseRekursiv(node.getHogre()), maksDistanseRekursiv(node.getVenstre())) + 1;
+		return Math.max(hoydeRek(node.getHogre()), hoydeRek(node.getVenstre())) + 1;
 	}
 
 }
