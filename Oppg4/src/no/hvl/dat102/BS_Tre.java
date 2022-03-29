@@ -21,6 +21,20 @@ public class BS_Tre<T extends Comparable<? super T>> implements SoektreInterface
 	 * @return true om elementet finst, false elles.
 	 */
 	public boolean inneholder(T element) {
+		if (this.rot == null)
+			return false;
+
+		BinaerTreNode<T> node = this.rot;
+		while (node != null) {
+			if (node.getElement().compareTo(element) < 0) {
+				node = node.getHogre();
+			} else if (node.getElement().compareTo(element) > 0) {
+				node = node.getVenstre();
+			} else {
+				return true;
+			}
+		}
+
 		return false;
 	}
 
@@ -59,23 +73,33 @@ public class BS_Tre<T extends Comparable<? super T>> implements SoektreInterface
 	 * @return null om elementet ikkje finst fr� f�r. Elles det element som var i
 	 *         treet fr� f�r.
 	 */
-	public T leggTil(T nyElement) {
-		return null;
-	}
+	public T leggTil(T element) {
+		if (this.inneholder(element)) {
+			return element;
+		}
 
-	private BinaerTreNode<T> leggTil(BinaerTreNode<T> p, T element) {
-		if (p == null) {
-			return new BinaerTreNode<T>(element);
+		if (this.rot == null) {
+			this.rot = new BinaerTreNode<T>(element);
 		} else {
-			if (element.compareTo(p.getElement()) < 0) {
-				p.setVenstre(leggTil(p.getVenstre(), element));
-			} else {
-				// Alternativ med to kodelinjer
-				BinaerTreNode<T> q = leggTil(p.getHogre(), element);
-				p.setHogre(q);
+			BinaerTreNode<T> node = this.rot;
+			while (true) {
+				if (node.getElement().compareTo(element) < 0) {
+					if (node.getHogre() == null) {
+						node.setHogre(new BinaerTreNode<T>(element));
+						break;
+					}
+					node = node.getHogre();
+				} else {
+					if (node.getVenstre() == null) {
+						node.setVenstre(new BinaerTreNode<T>(element));
+						break;
+					}
+					node = node.getVenstre();
+				}
 			}
 		}
-		return p;
+
+		return null;
 	}
 
 	/**
@@ -97,15 +121,15 @@ public class BS_Tre<T extends Comparable<? super T>> implements SoektreInterface
 		return null;
 	}
 
-	// my shit oppgave 1
+	// Oppgave 1
 	public int hoyde() {
-		return hoydeRek(rot) - 1;
+		return hoydeRek(rot);
 	}
 
 	private int hoydeRek(BinaerTreNode<T> node) {
 		if (node == null)
-			return 0;
-		return Math.max(hoydeRek(node.getHogre()), hoydeRek(node.getVenstre())) + 1;
+			return -1;
+		return Math.max(1 + hoydeRek(node.getHogre()), 1 + hoydeRek(node.getVenstre()));
 	}
 
 }
