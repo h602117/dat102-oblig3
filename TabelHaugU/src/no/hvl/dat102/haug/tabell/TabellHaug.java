@@ -1,7 +1,8 @@
 package no.hvl.dat102.haug.tabell;
 
+import javax.naming.TimeLimitExceededException;
+
 public class TabellHaug<T extends Comparable<T>> {
-	// Lager en minimumshaug
 
 	private T[] data;
 	private int antall;
@@ -16,14 +17,13 @@ public class TabellHaug<T extends Comparable<T>> {
 	public void leggTilElement(T el) {
 		if (antall == data.length)
 			utvidTabell();
-		data[antall] = el; // Plasser den nye helt sist
+		data[antall] = el;
 		antall++;
 		if (antall > 1)
-			reparerOpp(); // Bytt om oppover hvis nødvendig
+			reparerOpp();
 	}
 
 	private void utvidTabell() {
-		// Dobler tabellen ved behov for utviding
 		int lengde = data.length;
 		T[] ny = (T[]) new Comparable[2 * lengde];
 		for (int i = 0; i < antall; i++)
@@ -32,7 +32,29 @@ public class TabellHaug<T extends Comparable<T>> {
 	}
 
 	private void reparerOpp() {
-		//Fyll ut
+		if (antall <= 1)
+			return;
+
+		int barn = antall - 1;
+		int bror = barn % 2 == 0 ? barn - 1 : -1;
+		int forelder = barn % 2 == 0 ? (barn - 2) / 2 : (barn - 1) / 2;
+
+		while (barn > 0) {
+			int tilFlytting = barn;
+			if (bror != -1)
+				tilFlytting = data[barn].compareTo(data[bror]) < 0 ? barn : bror;
+
+			if (data[tilFlytting].compareTo(data[forelder]) >= 0)
+				return;
+
+			T tmp = data[forelder];
+			data[forelder] = data[tilFlytting];
+			data[tilFlytting] = tmp;
+
+			barn = forelder;
+			bror = barn % 2 == 0 ? barn - 1 : -1;
+			forelder = barn % 2 == 0 ? (barn - 2) / 2 : (barn - 1) / 2;
+		}
 	}
 
 	public T fjernMinste() {
@@ -40,7 +62,7 @@ public class TabellHaug<T extends Comparable<T>> {
 		if (antall > 0) {
 			svar = data[0];
 			data[0] = data[antall - 1];
-			reparerNed(); // Bytter om nedover hvis nødvendig
+			reparerNed();
 			antall--;
 		}
 		return svar;
@@ -56,23 +78,21 @@ public class TabellHaug<T extends Comparable<T>> {
 
 	private void reparerNed() {
 		T hjelp;
-		
+
 		boolean ferdig = false;
-		int forelder = 0; // Start i roten og sml med neste nivå
+		int forelder = 0;
 		int minbarn;
 		int vbarn = forelder * 2 + 1;
 		int hbarn = vbarn + 1;
-		while ((vbarn < antall) && !ferdig) { // Har flere noder lenger nede
+		while ((vbarn < antall) && !ferdig) {
 			minbarn = vbarn;
 
 			if ((hbarn < antall) && ((data[hbarn]).compareTo(data[vbarn]) < 0))
 				minbarn = hbarn;
-			// Har funnet det "minste" av barna. Sml med forelder
 
-			
-			if ((data[forelder]).compareTo(data[minbarn]) <= 0)
+			if ((data[forelder]).compareTo(data[minbarn]) <= 0) {
 				ferdig = true;
-			else { // Bytt om og gå videre nedover hvis forelder er for stor
+			} else {
 				hjelp = data[minbarn];
 				data[minbarn] = data[forelder];
 				data[forelder] = hjelp;
@@ -88,7 +108,6 @@ public class TabellHaug<T extends Comparable<T>> {
 	}
 
 	public void skrivTab() {
-		// Hjelpemetode til test
 		for (int i = 0; i < antall; i++)
 			System.out.print(data[i] + " ");
 		System.out.println();
